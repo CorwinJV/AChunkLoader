@@ -1,0 +1,5 @@
+#gui
+itemGroup.achunkloader=A Chunk Loader
+
+#blocks
+tiles.achunkloader:chunk_loader.name=Chunk Loader

@@ -1,0 +1,14 @@
+.gradle/
+out/
+build/
+run/
+eclipse/
+javadoc/
+gradle/
+gradlew
+gradlew.bat
+AChunkLoader.iws
+AChunkLoader.iml
+AChunkLoader.ipr
+Art Source/
+Release/

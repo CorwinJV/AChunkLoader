@@ -1,0 +1,16 @@
+[
+{
+  "modid": "achunkloader",
+  "name": "A Chunk Loader",
+  "description": "It loads chunks",
+  "version": "${version}",
+  "mcversion": "${mcversion}",
+  "url": "https://github.com/CorwinJV/AChunkLoader",
+  "updateUrl": "",
+  "authorList": ["CorwinJV"],
+  "credits": "",
+  "logoFile": "",
+  "screenshots": [],
+  "dependencies": []
+}
+]
