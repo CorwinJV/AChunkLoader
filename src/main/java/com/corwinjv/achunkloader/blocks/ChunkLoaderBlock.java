@@ -20,7 +20,7 @@ import javax.annotation.Nullable;
 public class ChunkLoaderBlock extends ModBlock implements ITileEntityProvider {
     ChunkLoaderBlock()
     {
-        super(Material.WOOD);
+        super(Material.ROCK);
         setHardness(2.0f);
     }
 
