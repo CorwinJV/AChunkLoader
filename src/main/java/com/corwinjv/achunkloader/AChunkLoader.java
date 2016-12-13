@@ -5,7 +5,9 @@ package com.corwinjv.achunkloader;
 
 import com.corwinjv.achunkloader.blocks.ModBlocks;
 import com.corwinjv.achunkloader.config.ConfigurationHandler;
+import com.corwinjv.achunkloader.eventhandlers.ChunkLoadingCallback;
 import com.corwinjv.achunkloader.proxy.CommonProxy;
+import net.minecraftforge.common.ForgeChunkManager;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.SidedProxy;
@@ -29,6 +31,9 @@ public class AChunkLoader
         // Config
         ConfigurationHandler.Init(event.getSuggestedConfigurationFile());
         MinecraftForge.EVENT_BUS.register(new ConfigurationHandler());
+
+        // Chunk Loading
+        ForgeChunkManager.setForcedChunkLoadingCallback(instance, new ChunkLoadingCallback());
 
         // Blocks and Items
         ModBlocks.init();

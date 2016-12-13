@@ -1,6 +1,7 @@
 package com.corwinjv.achunkloader.blocks;
 
 import com.corwinjv.achunkloader.Reference;
+import com.corwinjv.achunkloader.blocks.tileentities.ChunkLoaderTileEntity;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.init.Items;
@@ -34,6 +35,7 @@ public class ModBlocks
         ModBlock chunk_loader = new ChunkLoaderBlock();
         chunk_loader.setUnlocalizedName(CHUNK_LOADER);
         mBlocks.put(CHUNK_LOADER, chunk_loader);
+        mTileEntityClasses.put(CHUNK_LOADER, ChunkLoaderTileEntity.class);
     }
 
     public static ModBlock getBlock(String key)
