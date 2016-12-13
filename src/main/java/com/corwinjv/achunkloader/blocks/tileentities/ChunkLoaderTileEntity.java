@@ -42,7 +42,6 @@ public class ChunkLoaderTileEntity extends TileEntity implements ITickable
         if(ticket != null
                 && ticket != aTicket)
         {
-            unforceChunkLoading();
             ForgeChunkManager.releaseTicket(ticket);
         }
         ticket = aTicket;
