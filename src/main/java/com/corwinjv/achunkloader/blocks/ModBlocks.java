@@ -4,6 +4,7 @@ import com.corwinjv.achunkloader.Reference;
 import com.corwinjv.achunkloader.blocks.tileentities.ChunkLoaderTileEntity;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
+import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemBlock;
@@ -92,10 +93,11 @@ public class ModBlocks
     {
         ModBlock item = mBlocks.get(CHUNK_LOADER);
         GameRegistry.addRecipe(new ItemStack(item, 1),
-                "SSS",
-                " K ",
-                "SSS",
-                'S', Items.WHEAT_SEEDS,
-                'K', Items.STICK);
+                "OOO",
+                "GEG",
+                "OOO",
+                'O', Blocks.OBSIDIAN,
+                'E', Items.ENDER_PEARL,
+                'G', Blocks.GOLD_BLOCK);
     }
 }

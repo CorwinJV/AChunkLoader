@@ -15,7 +15,7 @@ public class ConfigurationHandler
     public static Configuration configuration;
 
     /** Config Properties **/
-    public static boolean isHardMode = false;
+    public static int chunkLoaderSize = 5;
 
     public static void Init(File aConfigFile)
     {
@@ -37,6 +37,7 @@ public class ConfigurationHandler
 
     private static void loadConfiguration()
     {
+        chunkLoaderSize = configuration.getInt("ChunkLoaderSize", Configuration.CATEGORY_GENERAL, 5, 1, 32,"Number of chunks square to load around the chunk loader. Should be an odd number.");
         if(configuration.hasChanged())
         {
             configuration.save();

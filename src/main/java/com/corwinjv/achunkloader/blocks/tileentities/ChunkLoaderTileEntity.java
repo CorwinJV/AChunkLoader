@@ -1,6 +1,7 @@
 package com.corwinjv.achunkloader.blocks.tileentities;
 
 import com.corwinjv.achunkloader.AChunkLoader;
+import com.corwinjv.achunkloader.config.ConfigurationHandler;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ITickable;
 import net.minecraft.util.math.ChunkPos;
@@ -32,9 +33,26 @@ public class ChunkLoaderTileEntity extends TileEntity implements ITickable
         ticket.getModData().setInteger("yPos", getPos().getY());
         ticket.getModData().setInteger("zPos", getPos().getZ());
 
-        ChunkPos chunkPos = new ChunkPos(pos.getX() / 16, pos.getZ() / 16);
-        ForgeChunkManager.forceChunk(ticket, chunkPos);
-        FMLLog.log(Level.INFO, "Chunk loaded at chunk pos: " + chunkPos);
+        int size = ConfigurationHandler.chunkLoaderSize;
+        if(size % 2 != 0 && size > 1)
+        {
+            size--;
+        }
+        int dist = size / 2;
+
+        //FMLLog.log(Level.INFO, "chunk loader size: " + ConfigurationHandler.chunkLoaderSize);
+        int chunkCount = 0;
+        ChunkPos centerPos = new ChunkPos(pos.getX() / 16, pos.getZ() / 16);
+        for(int x = centerPos.chunkXPos - dist; x <= centerPos.chunkXPos + dist; x++)
+        {
+            for(int z = centerPos.chunkZPos - dist; z <= centerPos.chunkZPos + dist; z++)
+            {
+                ChunkPos chunkPos = new ChunkPos(x, z);
+                ForgeChunkManager.forceChunk(ticket, chunkPos);
+                //FMLLog.log(Level.INFO, "Chunk #" + chunkCount + " loaded at chunk pos: " + chunkPos);
+                chunkCount++;
+            }
+        }
     }
 
     public void forceChunkLoading(ForgeChunkManager.Ticket aTicket)
