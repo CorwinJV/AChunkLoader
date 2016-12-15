@@ -9,6 +9,8 @@ import net.minecraft.world.storage.MapStorage;
 import net.minecraftforge.fml.common.FMLLog;
 import org.apache.logging.log4j.Level;
 
+import javax.annotation.Nonnull;
+
 /**
  * Created by CorwinJV on 12/14/2016.
  */
@@ -41,7 +43,7 @@ public class SavedData extends WorldSavedData {
         return instance;
     }
 
-    public SavedData()
+    private SavedData()
     {
         super(DATA_NAME);
     }
@@ -50,6 +52,7 @@ public class SavedData extends WorldSavedData {
         super(name);
     }
 
+    @Nonnull
     public ChunkLoaders getChunkLoaders()
     {
         return chunkLoaders;
@@ -62,7 +65,7 @@ public class SavedData extends WorldSavedData {
     }
 
     @Override
-    public void readFromNBT(NBTTagCompound nbt) {
+    public void readFromNBT(@Nonnull  NBTTagCompound nbt) {
         String json = nbt.getString(ChunkLoaders.class.getSimpleName());
         if(!json.isEmpty())
         {
@@ -70,8 +73,9 @@ public class SavedData extends WorldSavedData {
         }
     }
 
+    @Nonnull
     @Override
-    public NBTTagCompound writeToNBT(NBTTagCompound compound) {
+    public NBTTagCompound writeToNBT(@Nonnull  NBTTagCompound compound) {
         compound.setString(ChunkLoaders.class.getSimpleName(), new Gson().toJson(chunkLoaders, ChunkLoaders.class));
         return compound;
     }
