@@ -7,6 +7,7 @@ import com.corwinjv.achunkloader.blocks.ModBlocks;
 import com.corwinjv.achunkloader.blocks.tileentities.ChunkLoaderTileEntity;
 import com.corwinjv.achunkloader.config.ConfigurationHandler;
 import com.corwinjv.achunkloader.eventhandlers.ChunkLoadingCallback;
+import com.corwinjv.achunkloader.eventhandlers.PlayerActivity;
 import com.corwinjv.achunkloader.proxy.CommonProxy;
 import com.corwinjv.achunkloader.storage.ChunkLoaderPos;
 import com.corwinjv.achunkloader.storage.ChunkLoaders;
@@ -23,6 +24,7 @@ import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLServerStartedEvent;
+import net.minecraftforge.fml.common.gameevent.PlayerEvent;
 import org.apache.logging.log4j.Level;
 
 
@@ -41,6 +43,9 @@ public class AChunkLoader
         // Config
         ConfigurationHandler.Init(event.getSuggestedConfigurationFile());
         MinecraftForge.EVENT_BUS.register(new ConfigurationHandler());
+
+        // Login/Logout Tracking
+        MinecraftForge.EVENT_BUS.register(new PlayerActivity());
 
         // Chunk Loading
         ForgeChunkManager.setForcedChunkLoadingCallback(instance, new ChunkLoadingCallback());

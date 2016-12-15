@@ -1,4 +1,7 @@
 package com.corwinjv.achunkloader.storage;
+import net.minecraftforge.fml.common.FMLLog;
+import org.apache.logging.log4j.Level;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -17,22 +20,27 @@ public class ChunkLoaders
 
     public void addLoader(ChunkLoaderPos pos)
     {
-        synchronized(lock)
+        if(!loaders.contains(pos))
         {
-            if(!loaders.contains(pos))
-            {
-                loaders.add(pos);
-            }
+            loaders.add(pos);
         }
     }
 
     public void removeLoader(ChunkLoaderPos pos)
     {
-        synchronized(lock)
+        if(pos != null)
         {
-            if(pos != null)
+            loaders.remove(pos);
+        }
+    }
+
+    public void updateLoginTimestamp(String ownerId, long loginTimeStamp)
+    {
+        for(ChunkLoaderPos loaderPosItr : loaders)
+        {
+            if(loaderPosItr.ownerId.equals(ownerId))
             {
-                loaders.remove(pos);
+                loaderPosItr.loginTimeStamp = loginTimeStamp;
             }
         }
     }

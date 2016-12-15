@@ -5,18 +5,45 @@ import com.corwinjv.achunkloader.config.ConfigurationHandler;
 import com.corwinjv.achunkloader.storage.ChunkLoaderPos;
 import com.corwinjv.achunkloader.storage.ChunkLoaders;
 import com.corwinjv.achunkloader.storage.SavedData;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.ChunkPos;
 import net.minecraftforge.common.ForgeChunkManager;
 import net.minecraftforge.fml.common.FMLLog;
 import org.apache.logging.log4j.Level;
 
+import javax.annotation.Nonnull;
+import java.util.UUID;
+
 /**
  * Created by CorwinJV on 12/13/2016.
  */
 public class ChunkLoaderTileEntity extends TileEntity
 {
+    private final String UUID_TAG = "UUID_TAG";
     private ForgeChunkManager.Ticket ticket;
+
+    private UUID ownerId = null;
+
+    public void setOwnerId(UUID uuid)
+    {
+        ownerId = uuid;
+    }
+
+    @Override
+    public void readFromNBT(NBTTagCompound compound)
+    {
+        ownerId = compound.getUniqueId(UUID_TAG);
+        super.readFromNBT(compound);
+    }
+
+    @Nonnull
+    @Override
+    public NBTTagCompound writeToNBT(NBTTagCompound compound)
+    {
+        compound.setUniqueId(UUID_TAG, ownerId);
+        return super.writeToNBT(compound);
+    }
 
     public void forceChunkLoading()
     {
@@ -39,7 +66,7 @@ public class ChunkLoaderTileEntity extends TileEntity
         // Save coords to world data
         SavedData data = SavedData.get(worldObj);
         ChunkLoaders cl = data.getChunkLoaders();
-        cl.addLoader(new ChunkLoaderPos(worldObj.provider.getDimension(), getPos()));
+        cl.addLoader(new ChunkLoaderPos(ownerId.toString(), worldObj.provider.getDimension(), getPos(), System.currentTimeMillis()));
         data.setChunkLoaders(cl);
 
         int size = ConfigurationHandler.chunkLoaderSize;
@@ -85,9 +112,17 @@ public class ChunkLoaderTileEntity extends TileEntity
 
         // Remove loader from world data
         SavedData data = SavedData.get(worldObj);
+        if(worldObj.isRemote
+                || data == null)
+        {
+            return;
+        }
         ChunkLoaders cl = data.getChunkLoaders();
-        cl.removeLoader(new ChunkLoaderPos(worldObj.provider.getDimension(), getPos()));
-        data.setChunkLoaders(cl);
+        if(cl != null && worldObj.provider != null)
+        {
+            cl.removeLoader(new ChunkLoaderPos(ownerId.toString(), worldObj.provider.getDimension(), getPos(), 0));
+            data.setChunkLoaders(cl);
+        }
 
         super.invalidate();
     }
