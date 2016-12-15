@@ -1,6 +1,4 @@
 package com.corwinjv.achunkloader.storage;
-import net.minecraftforge.fml.common.FMLLog;
-import org.apache.logging.log4j.Level;
 
 import java.util.ArrayList;
 import java.util.List;

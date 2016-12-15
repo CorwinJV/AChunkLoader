@@ -8,6 +8,7 @@ import com.corwinjv.achunkloader.blocks.tileentities.ChunkLoaderTileEntity;
 import com.corwinjv.achunkloader.config.ConfigurationHandler;
 import com.corwinjv.achunkloader.eventhandlers.ChunkLoadingCallback;
 import com.corwinjv.achunkloader.eventhandlers.PlayerActivity;
+import com.corwinjv.achunkloader.eventhandlers.PlayerTimeout;
 import com.corwinjv.achunkloader.proxy.CommonProxy;
 import com.corwinjv.achunkloader.storage.ChunkLoaderPos;
 import com.corwinjv.achunkloader.storage.ChunkLoaders;
@@ -46,6 +47,7 @@ public class AChunkLoader
 
         // Login/Logout Tracking
         MinecraftForge.EVENT_BUS.register(new PlayerActivity());
+        MinecraftForge.EVENT_BUS.register(new PlayerTimeout());
 
         // Chunk Loading
         ForgeChunkManager.setForcedChunkLoadingCallback(instance, new ChunkLoadingCallback());
@@ -85,11 +87,12 @@ public class AChunkLoader
             if (world != null && !world.isRemote)
             {
                 ChunkLoaderTileEntity chunkLoader = (ChunkLoaderTileEntity) world.getTileEntity(chunkLoaderPos.pos);
-                if (chunkLoader != null)
+                if (chunkLoader != null
+                        && chunkLoader.getEnabled())
                 {
                     chunkLoader.setWorldObj(world);
                     chunkLoader.validate();
-                    FMLLog.log(Level.INFO, "The chunk at " + chunkLoaderPos + " has been loaded.");
+                    //FMLLog.log(Level.INFO, "The chunk at " + chunkLoaderPos + " has been loaded.");
                 }
                 else
                 {

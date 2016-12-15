@@ -21,9 +21,12 @@ import java.util.UUID;
 public class ChunkLoaderTileEntity extends TileEntity
 {
     private final String UUID_TAG = "UUID_TAG";
+    private final String ENABLED_TAG = "ENABLED_TAG";
+
     private ForgeChunkManager.Ticket ticket;
 
     private UUID ownerId = null;
+    private boolean enabled = true;
 
     public void setOwnerId(UUID uuid)
     {
@@ -34,6 +37,7 @@ public class ChunkLoaderTileEntity extends TileEntity
     public void readFromNBT(NBTTagCompound compound)
     {
         ownerId = compound.getUniqueId(UUID_TAG);
+        enabled = compound.getBoolean(ENABLED_TAG);
         super.readFromNBT(compound);
     }
 
@@ -42,11 +46,53 @@ public class ChunkLoaderTileEntity extends TileEntity
     public NBTTagCompound writeToNBT(NBTTagCompound compound)
     {
         compound.setUniqueId(UUID_TAG, ownerId);
+        compound.setBoolean(ENABLED_TAG, enabled);
         return super.writeToNBT(compound);
+    }
+
+    public boolean getEnabled()
+    {
+        return enabled;
+    }
+
+    public void enable()
+    {
+        if(!enabled)
+        {
+            //FMLLog.log(Level.INFO, "Enabling chunkloader at pos: " + pos + " for owner: " + ownerId);
+
+            // Force chunk loading
+            enabled = true;
+            forceChunkLoading();
+        }
+    }
+
+    public void disable()
+    {
+        if(enabled)
+        {
+            //FMLLog.log(Level.INFO, "Disabling chunk at: " + toString() + " for owner: " + ownerId);
+
+            // Unforce chunk, release ticket
+            unforceChunkLoading();
+
+            if(ticket != null)
+            {
+                ForgeChunkManager.releaseTicket(ticket);
+                ticket = null;
+            }
+
+            enabled = false;
+        }
     }
 
     public void forceChunkLoading()
     {
+        if(!enabled)
+        {
+            return;
+        }
+
         if(ticket == null)
         {
             ticket = ForgeChunkManager.requestTicket(AChunkLoader.instance, worldObj, ForgeChunkManager.Type.NORMAL);
@@ -89,6 +135,7 @@ public class ChunkLoaderTileEntity extends TileEntity
                 chunkCount++;
             }
         }
+        //FMLLog.log(Level.INFO, "forceChunkLoading() at pos: " + pos.toString() + " " + chunkCount + " chunks loaded.");
     }
 
     public void forceChunkLoading(ForgeChunkManager.Ticket aTicket)
@@ -117,8 +164,9 @@ public class ChunkLoaderTileEntity extends TileEntity
         {
             return;
         }
+
         ChunkLoaders cl = data.getChunkLoaders();
-        if(cl != null && worldObj.provider != null)
+        if(worldObj.provider != null)
         {
             cl.removeLoader(new ChunkLoaderPos(ownerId.toString(), worldObj.provider.getDimension(), getPos(), 0));
             data.setChunkLoaders(cl);
@@ -129,8 +177,20 @@ public class ChunkLoaderTileEntity extends TileEntity
 
     public void unforceChunkLoading()
     {
-        ChunkPos chunkPos = new ChunkPos(pos.getX() / 16, pos.getZ() / 16);
-        //FMLLog.log(Level.INFO, "Unchunkloading at chunk pos: " + chunkPos);
-        ForgeChunkManager.unforceChunk(ticket, chunkPos);
+        int size = ConfigurationHandler.chunkLoaderSize;
+        if(size % 2 != 0 && size > 1)
+        {
+            size--;
+        }
+        int dist = size / 2;
+
+        ChunkPos centerPos = new ChunkPos(pos.getX() / 16, pos.getZ() / 16);
+        for(int x = centerPos.chunkXPos - dist; x <= centerPos.chunkXPos + dist; x++) {
+            for (int z = centerPos.chunkZPos - dist; z <= centerPos.chunkZPos + dist; z++) {
+                ChunkPos chunkPos = new ChunkPos(x, z);
+                ForgeChunkManager.unforceChunk(ticket, chunkPos);
+                FMLLog.log(Level.INFO, "Unchunkloading at chunk pos: " + chunkPos);
+            }
+        }
     }
 }
