@@ -30,6 +30,7 @@ public class ChunkLoaderBlock extends ModBlock implements ITileEntityProvider {
             ChunkLoaderTileEntity chunkLoaderTileEntity = (ChunkLoaderTileEntity)worldIn.getTileEntity(pos);
             if(chunkLoaderTileEntity != null)
             {
+                chunkLoaderTileEntity.setOwnerId(placer.getUniqueID());
                 chunkLoaderTileEntity.forceChunkLoading();
             }
         }
