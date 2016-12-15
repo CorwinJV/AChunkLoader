@@ -4,16 +4,26 @@ package com.corwinjv.achunkloader;
  */
 
 import com.corwinjv.achunkloader.blocks.ModBlocks;
+import com.corwinjv.achunkloader.blocks.tileentities.ChunkLoaderTileEntity;
 import com.corwinjv.achunkloader.config.ConfigurationHandler;
 import com.corwinjv.achunkloader.eventhandlers.ChunkLoadingCallback;
 import com.corwinjv.achunkloader.proxy.CommonProxy;
+import com.corwinjv.achunkloader.storage.ChunkLoaderPos;
+import com.corwinjv.achunkloader.storage.ChunkLoaders;
+import com.corwinjv.achunkloader.storage.SavedData;
+import net.minecraft.world.DimensionType;
+import net.minecraft.world.World;
+import net.minecraftforge.common.DimensionManager;
 import net.minecraftforge.common.ForgeChunkManager;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.fml.common.FMLLog;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.SidedProxy;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
+import net.minecraftforge.fml.common.event.FMLServerStartedEvent;
+import org.apache.logging.log4j.Level;
 
 
 @Mod(modid=Reference.MOD_ID, name=Reference.MOD_NAME, version=Reference.MOD_VERSION, guiFactory = Reference.GUI_FACTORY_CLASS)
@@ -55,5 +65,32 @@ public class AChunkLoader
     {
         proxy.registerGui();
         proxy.registerParticleRenderer();
+    }
+
+    @Mod.EventHandler
+    public void serverStarted(FMLServerStartedEvent e)
+    {
+        World world = DimensionManager.getWorld(DimensionType.OVERWORLD.getId());
+        SavedData data = SavedData.get(world);
+        ChunkLoaders chunkLoadersModel = data.getChunkLoaders();
+
+        for (ChunkLoaderPos chunkLoaderPos : chunkLoadersModel.getLoaders())
+        {
+            world = DimensionManager.getWorld(chunkLoaderPos.dimension);
+            if (world != null && !world.isRemote)
+            {
+                ChunkLoaderTileEntity chunkLoader = (ChunkLoaderTileEntity) world.getTileEntity(chunkLoaderPos.pos);
+                if (chunkLoader != null)
+                {
+                    chunkLoader.setWorldObj(world);
+                    chunkLoader.validate();
+                    FMLLog.log(Level.INFO, "The chunk at " + chunkLoaderPos + " has been loaded.");
+                }
+                else
+                {
+                    chunkLoadersModel.removeLoader(chunkLoaderPos);
+                }
+            }
+        }
     }
 }

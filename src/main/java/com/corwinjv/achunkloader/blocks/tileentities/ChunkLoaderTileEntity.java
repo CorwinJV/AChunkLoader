@@ -2,8 +2,10 @@ package com.corwinjv.achunkloader.blocks.tileentities;
 
 import com.corwinjv.achunkloader.AChunkLoader;
 import com.corwinjv.achunkloader.config.ConfigurationHandler;
+import com.corwinjv.achunkloader.storage.ChunkLoaderPos;
+import com.corwinjv.achunkloader.storage.ChunkLoaders;
+import com.corwinjv.achunkloader.storage.SavedData;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.ITickable;
 import net.minecraft.util.math.ChunkPos;
 import net.minecraftforge.common.ForgeChunkManager;
 import net.minecraftforge.fml.common.FMLLog;
@@ -12,7 +14,7 @@ import org.apache.logging.log4j.Level;
 /**
  * Created by CorwinJV on 12/13/2016.
  */
-public class ChunkLoaderTileEntity extends TileEntity implements ITickable
+public class ChunkLoaderTileEntity extends TileEntity
 {
     private ForgeChunkManager.Ticket ticket;
 
@@ -29,9 +31,16 @@ public class ChunkLoaderTileEntity extends TileEntity implements ITickable
             return;
         }
 
+        // Set Coords on the ticket
         ticket.getModData().setInteger("xPos", getPos().getX());
         ticket.getModData().setInteger("yPos", getPos().getY());
         ticket.getModData().setInteger("zPos", getPos().getZ());
+
+        // Save coords to world data
+        SavedData data = SavedData.get(worldObj);
+        ChunkLoaders cl = data.getChunkLoaders();
+        cl.addLoader(new ChunkLoaderPos(worldObj.provider.getDimension(), getPos()));
+        data.setChunkLoaders(cl);
 
         int size = ConfigurationHandler.chunkLoaderSize;
         if(size % 2 != 0 && size > 1)
@@ -73,18 +82,20 @@ public class ChunkLoaderTileEntity extends TileEntity implements ITickable
             ForgeChunkManager.releaseTicket(ticket);
             ticket = null;
         }
+
+        // Remove loader from world data
+        SavedData data = SavedData.get(worldObj);
+        ChunkLoaders cl = data.getChunkLoaders();
+        cl.removeLoader(new ChunkLoaderPos(worldObj.provider.getDimension(), getPos()));
+        data.setChunkLoaders(cl);
+
         super.invalidate();
     }
 
     public void unforceChunkLoading()
     {
         ChunkPos chunkPos = new ChunkPos(pos.getX() / 16, pos.getZ() / 16);
-        FMLLog.log(Level.INFO, "Unchunkloading at chunk pos: " + chunkPos);
+        //FMLLog.log(Level.INFO, "Unchunkloading at chunk pos: " + chunkPos);
         ForgeChunkManager.unforceChunk(ticket, chunkPos);
-    }
-
-    @Override
-    public void update() {
-        //FMLLog.log(Level.INFO, "I'm ticking at pos: " + pos);
     }
 }
