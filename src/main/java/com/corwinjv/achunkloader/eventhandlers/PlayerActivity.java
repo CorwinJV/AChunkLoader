@@ -53,11 +53,12 @@ public class PlayerActivity
     @SubscribeEvent
     public void onWorldTick(TickEvent.WorldTickEvent e)
     {
-        long timeout = ConfigurationHandler.playerInactivityTimeout * 60 * 60 * 1000;
+        long timeout = ConfigurationHandler.playerInactivityTimeout;
         if(timeout == 0)
         {
             return;
         }
+        timeout = timeout * 60 * 60 * 1000;
 
         if(!e.world.isRemote
             && e.world.getTotalWorldTime() % 20 == 0)
