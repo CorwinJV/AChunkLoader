@@ -1,4 +1,4 @@
-# A Chunk Loader
+# A Chunk Loader [![](http://cf.way2muchnoise.eu/full_a-chunk-loader_downloads.svg)](https://minecraft.curseforge.com/projects/a-chunk-loader)
 A 1.11 Minecraft Forge Chunk Loader
 
 cfg fields:
