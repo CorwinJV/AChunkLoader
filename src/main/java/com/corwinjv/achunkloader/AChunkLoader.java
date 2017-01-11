@@ -85,7 +85,7 @@ public class AChunkLoader
                 if (chunkLoader != null
                         && chunkLoader.getEnabled())
                 {
-                    chunkLoader.setWorldObj(world);
+                    chunkLoader.setWorld(world);
                     chunkLoader.validate();
                     //FMLLog.log(Level.INFO, "The chunk at " + chunkLoaderPos + " has been loaded.");
                 }
