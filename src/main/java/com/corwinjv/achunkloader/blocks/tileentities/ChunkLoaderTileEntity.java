@@ -95,7 +95,7 @@ public class ChunkLoaderTileEntity extends TileEntity
 
         if(ticket == null)
         {
-            ticket = ForgeChunkManager.requestTicket(AChunkLoader.instance, worldObj, ForgeChunkManager.Type.NORMAL);
+            ticket = ForgeChunkManager.requestTicket(AChunkLoader.instance, world, ForgeChunkManager.Type.NORMAL);
         }
 
         if(ticket == null)
@@ -110,9 +110,9 @@ public class ChunkLoaderTileEntity extends TileEntity
         ticket.getModData().setInteger("zPos", getPos().getZ());
 
         // Save coords to world data
-        SavedData data = SavedData.get(worldObj);
+        SavedData data = SavedData.get(world);
         ChunkLoaders cl = data.getChunkLoaders();
-        cl.addLoader(new ChunkLoaderPos(ownerId.toString(), worldObj.provider.getDimension(), getPos(), System.currentTimeMillis()));
+        cl.addLoader(new ChunkLoaderPos(ownerId.toString(), world.provider.getDimension(), getPos(), System.currentTimeMillis()));
         data.setChunkLoaders(cl);
 
         int size = ConfigurationHandler.chunkLoaderSize;
@@ -158,17 +158,17 @@ public class ChunkLoaderTileEntity extends TileEntity
         }
 
         // Remove loader from world data
-        SavedData data = SavedData.get(worldObj);
-        if(worldObj.isRemote
+        SavedData data = SavedData.get(world);
+        if(world.isRemote
                 || data == null)
         {
             return;
         }
 
         ChunkLoaders cl = data.getChunkLoaders();
-        if(worldObj.provider != null)
+        if(world.provider != null)
         {
-            cl.removeLoader(new ChunkLoaderPos(ownerId.toString(), worldObj.provider.getDimension(), getPos(), 0));
+            cl.removeLoader(new ChunkLoaderPos(ownerId.toString(), world.provider.getDimension(), getPos(), 0));
             data.setChunkLoaders(cl);
         }
 

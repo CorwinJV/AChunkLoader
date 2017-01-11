@@ -15,9 +15,9 @@ public class PlayerActivity
     @SubscribeEvent
     public void onPlayerLoggedInEvent(PlayerEvent.PlayerLoggedInEvent e)
     {
-        if(!e.player.worldObj.isRemote)
+        if(!e.player.world.isRemote)
         {
-            SavedData data = SavedData.get(e.player.worldObj);
+            SavedData data = SavedData.get(e.player.world);
             if(data != null)
             {
                 ChunkLoaders cl = data.getChunkLoaders();
@@ -27,7 +27,7 @@ public class PlayerActivity
                 // Enable all of the chunk loaders this player owns
                 for(ChunkLoaderPos loaderPos : cl.getLoaders())
                 {
-                    ChunkLoaderTileEntity te = (ChunkLoaderTileEntity)e.player.worldObj.getTileEntity(loaderPos.pos);
+                    ChunkLoaderTileEntity te = (ChunkLoaderTileEntity)e.player.world.getTileEntity(loaderPos.pos);
                     if(te != null)
                     {
                         te.enable();
@@ -40,9 +40,9 @@ public class PlayerActivity
     @SubscribeEvent
     public void onPlayerLoggedOutEvent(PlayerEvent.PlayerLoggedOutEvent e)
     {
-        if(!e.player.worldObj.isRemote)
+        if(!e.player.world.isRemote)
         {
-            SavedData data = SavedData.get(e.player.worldObj);
+            SavedData data = SavedData.get(e.player.world);
             if(data != null)
             {
                 ChunkLoaders cl = data.getChunkLoaders();

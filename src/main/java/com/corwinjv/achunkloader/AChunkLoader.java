@@ -5,6 +5,7 @@ package com.corwinjv.achunkloader;
 
 import com.corwinjv.achunkloader.blocks.ModBlocks;
 import com.corwinjv.achunkloader.blocks.tileentities.ChunkLoaderTileEntity;
+import com.corwinjv.achunkloader.commands.CommandStats;
 import com.corwinjv.achunkloader.config.ConfigurationHandler;
 import com.corwinjv.achunkloader.eventhandlers.ChunkLoadingCallback;
 import com.corwinjv.achunkloader.eventhandlers.PlayerActivity;
@@ -18,15 +19,9 @@ import net.minecraft.world.World;
 import net.minecraftforge.common.DimensionManager;
 import net.minecraftforge.common.ForgeChunkManager;
 import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.fml.common.FMLLog;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.SidedProxy;
-import net.minecraftforge.fml.common.event.FMLInitializationEvent;
-import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
-import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
-import net.minecraftforge.fml.common.event.FMLServerStartedEvent;
-import net.minecraftforge.fml.common.gameevent.PlayerEvent;
-import org.apache.logging.log4j.Level;
+import net.minecraftforge.fml.common.event.*;
 
 
 @Mod(modid=Reference.MOD_ID, name=Reference.MOD_NAME, version=Reference.MOD_VERSION, guiFactory = Reference.GUI_FACTORY_CLASS)
@@ -90,7 +85,7 @@ public class AChunkLoader
                 if (chunkLoader != null
                         && chunkLoader.getEnabled())
                 {
-                    chunkLoader.setWorldObj(world);
+                    chunkLoader.setWorld(world);
                     chunkLoader.validate();
                     //FMLLog.log(Level.INFO, "The chunk at " + chunkLoaderPos + " has been loaded.");
                 }
@@ -100,5 +95,10 @@ public class AChunkLoader
                 }
             }
         }
+    }
+
+    @Mod.EventHandler
+    public void serverStarting(FMLServerStartingEvent event) {
+        event.registerServerCommand(new CommandStats());
     }
 }
