@@ -9,6 +9,6 @@ playerInactivityTimeout defines how long (in hours) after a player has logged ou
 
 As of v1.1.0 chunks in all dimensions will be loaded at server start as long as they are enabled
 
-![recipe](http://i.imgur.com/X7E9Ah3.png "Chunk Loader Recipe")
+![recipe](http://i.imgur.com/9OgezBG.png "Chunk Loader Recipe")
 ![block](https://i.imgur.com/xrRhDfF.png "Chunk Loader Block")
 Thanks to whatthedrunk for the art
