@@ -2,7 +2,9 @@
 A 1.11.2 Minecraft Forge Chunk Loader
 
 The default chunkLoaderSize is 5x5 chunks (25 chunks)
+
 Your chunks will now load at server start no matter where they are (Added in v1.1.0)
+
 You can use the server command '/ACL-stats' to see how many chunks are being loaded (Added in v1.2.0)
 
 _cfg fields_
