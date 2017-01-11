@@ -26,12 +26,12 @@ import java.util.List;
 public class CommandStats extends CommandBase {
 
     @Override
-    public String getCommandName() {
+    public String getName() {
         return "ACL-stats";
     }
 
     @Override
-    public String getCommandUsage(ICommandSender sender) {
+    public String getUsage(ICommandSender sender) {
         return "ACL-stats";
     }
 
@@ -42,7 +42,7 @@ public class CommandStats extends CommandBase {
             World world = DimensionManager.getWorld(id);
             int chunkCount = getChunkCount(ForgeChunkManager.getPersistentChunksFor(world));
 
-            sender.addChatMessage(new TextComponentString(chunkCount + " chunks loaded in dim " + id));
+            sender.sendMessage(new TextComponentString(chunkCount + " chunks loaded in dim " + id));
         }
     }
 
